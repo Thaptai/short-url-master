@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>History</title>
+
+    <style>
+      table {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      table td,
+      table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      table tr:hover {
+        background-color: #ddd;
+      }
+
+      table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04aa6d;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <table>
+        <tr>
+          <th>Short url</th>
+          <th>Original url</th>
+          <th>Viewed</th>
+        </tr>
+        <tr v-for="item in list">
+          <td>
+            <a :href="'https://miniurl.herokuapp.com/' + item.path" target="_blank"
+              >https://miniurl.herokuapp.com/{{item.path}}</a
+            >
+          </td>
+          <td>
+            <a :href="item.url" target="_blank">{{item.url}}</a>
+          </td>
+          <td>{{item.view}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            list: [],
+          };
+        },
+        mounted() {
+          fetch("https://miniurl.herokuapp.com/api/history")
+            .then((res) => res.json())
+            .then((res) => {
+              this.list = res.result;
+            });
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
